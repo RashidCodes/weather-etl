@@ -60,70 +60,70 @@ class Extract():
 
 
 
-        @staticmethod 
-        def extract(
-            api_key: str,
-            fp_cities: str,
-            temperature_units: str = "metric"
-        ) -> DataFrame:
+    @staticmethod 
+    def extract(
+        api_key: str,
+        fp_cities: str,
+        temperature_units: str = "metric"
+    ) -> DataFrame:
 
-            """ 
-            Read a list of cities and get the weather 
-
-
-            Parameters
-            ----------
-            api_key: str 
-                API Key 
+        """ 
+        Read a list of cities and get the weather 
 
 
-            fp_cities: str 
-                File path of CSV containing cities 
+        Parameters
+        ----------
+        api_key: str 
+            API Key 
 
 
-            temperature_units:
-                choose one of "metric", "imperial", or "standard"
+        fp_cities: str 
+            File path of CSV containing cities 
 
 
-
-            Returns
-            -------
-            weather_df: DataFrame 
-                A dataframe of the weather for fp_cities
-
-            """ 
-
-
-            # read in the cities 
-            cities_df = pd.read_csv(fp_cities)
-
-            # request the data 
-            weather_df = DataFrame()
-
-            for city_name in cities_df:
-
-                weather = Extract.extract_city(
-                    api_key = api_key,
-                    city_name = city_name,
-                    temperature_units = temperature_units 
-                )
-
-                weather_df = pd.concat([weather_df, weather])
-
-
-            return weather_df 
+        temperature_units:
+            choose one of "metric", "imperial", or "standard"
 
 
 
+        Returns
+        -------
+        weather_df: DataFrame 
+            A dataframe of the weather for fp_cities
 
-        @staticmethod 
-        def extract_population(fp_population: str):
+        """ 
 
-            """ Extracts the population file """ 
 
-            population_df = pd.read_csv(fp_population)
+        # read in the cities 
+        cities_df = pd.read_csv(fp_cities)
 
-            return population_df
+        # request the data 
+        weather_df = DataFrame()
+
+        for city_name in cities_df:
+
+            weather = Extract.extract_city(
+                api_key = api_key,
+                city_name = city_name,
+                temperature_units = temperature_units 
+            )
+
+            weather_df = pd.concat([weather_df, weather])
+
+
+        return weather_df 
+
+
+
+
+    @staticmethod 
+    def extract_population(fp_population: str):
+
+        """ Extracts the population file """ 
+
+        population_df = pd.read_csv(fp_population)
+
+        return population_df
 
 
 

@@ -1,4 +1,4 @@
-from pandas import DataFrame, read_parquet, concat, to_parquet
+from pandas import DataFrame, read_parquet, concat
 import os 
 
 
@@ -97,7 +97,7 @@ class Load():
 
                 weather_table = Table(
                     target_table_name, meta,
-                    Column("datetime", String, primary_key=True)
+                    Column("datetime", String, primary_key=True),
                     Column("id", Integer, primary_key=True),
                     Column("name", String),
                     Column("temperature", Float),
