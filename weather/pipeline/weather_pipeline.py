@@ -28,12 +28,13 @@ def pipeline() -> bool:
          temperature_units="metric"
      )
 
+
      logger.info("extract complete")
 
 
      logger.info("commencing extract from city csv")
 
-     df_population = Extract.extract(fp_population="weather/data/australian_city_population.csv")
+     df_population = Extract.extract_population(fp_population="weather/data/australian_city_population.csv")
 
      logger.info("extract complete")
 
@@ -41,7 +42,7 @@ def pipeline() -> bool:
      # tranform
      logger.info("commencing transform")
 
-     tran_df = Tranform.transform(df=df, df_population=df_population)
+     tran_df = Transform.transform(df=weather_df, df_population=df_population)
      logger.info("tranform complete")
 
 
@@ -57,6 +58,7 @@ def pipeline() -> bool:
      )
 
      logger.info("load to file complete")
+
 
      
 

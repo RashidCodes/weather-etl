@@ -10,7 +10,7 @@ class Load():
         load_target: str,
         load_method: str = "overwrite",
         target_file_directory: str = None,
-        targe_file_name: str = None,
+        target_file_name: str = None,
         target_database_engine = None,
         target_table_name: str = None 
 
@@ -68,7 +68,7 @@ class Load():
                 if target_file_name in os.listdir(f"{target_file_directory}/"):
                     current_df = read_parquet(f"{target_file_directory}/{target_file_name}")
 
-                    new_df = pd.concat([
+                    new_df = concat([
                         current_df,
                         df[~df.index.isin(current_df.index)]
                     ])
@@ -114,7 +114,7 @@ class Load():
                 # upsert 
                 upsert_statement = insert_statement.on_conflict_do_update(
                     index_elements=["datetime", "id"],
-                    set_={c.key: c for c in insert_statemenet.excluded if c.key not in ["id", "datetime"]})
+                    set_={c.key: c for c in insert_statement.excluded if c.key not in ["id", "datetime"]})
 
 
                 target_database_engine.execute(upsert_statement)

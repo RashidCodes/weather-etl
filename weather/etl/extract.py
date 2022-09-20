@@ -1,5 +1,4 @@
-from pandas import DataFrame
-import pandas as pd 
+from pandas import DataFrame, json_normalize, read_csv, concat
 import requests 
 
 
@@ -49,12 +48,14 @@ class Extract():
 
         if response.status_code == 200:
             weather_data = response.json()
+            
+            normalised = json_normalize(weather_data)
 
-            normalised = pd.normalize(weather_data)
             return normalised 
 
+
         else:
-            raise Exception("Extracting weather api data faiiled") 
+            raise Exception("Extracting weather api data failed") 
 
 
 
@@ -95,12 +96,13 @@ class Extract():
 
 
         # read in the cities 
-        cities_df = pd.read_csv(fp_cities)
+        cities_df = read_csv(fp_cities)
+
 
         # request the data 
         weather_df = DataFrame()
 
-        for city_name in cities_df:
+        for city_name in cities_df["city_name"]:
 
             weather = Extract.extract_city(
                 api_key = api_key,
@@ -108,10 +110,12 @@ class Extract():
                 temperature_units = temperature_units 
             )
 
-            weather_df = pd.concat([weather_df, weather])
+            weather_df = concat([weather_df, weather])
 
 
-        return weather_df 
+
+
+        return weather_df.reset_index().drop(labels=["index"], axis=1)
 
 
 
@@ -121,7 +125,7 @@ class Extract():
 
         """ Extracts the population file """ 
 
-        population_df = pd.read_csv(fp_population)
+        population_df = read_csv(fp_population)
 
         return population_df
 

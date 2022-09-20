@@ -1,4 +1,4 @@
-from pandas import DataFrame, to_datetime
+from pandas import DataFrame, to_datetime, merge
 
 
 
@@ -35,22 +35,24 @@ class Transform():
 
 
         # set the city names to uppercase 
-        df["city_name"] = df["name"].str.upper()
+        df["city_name"] = df["name"].str.lower()
+
 
         # join df and df_population 
-        merged_df = pd.merge(left=df, right=df_population, on=["city_name"])
+        merged_df = df.merge(df_population, on=["city_name"])
 
         # select the relevant attributes 
         transformed_df = merged_df[["dt", "id", "name", "main.temp", "population"]]
 
+
         # create a new unique column id 
-        transformed_df["unique_id"] = df_selected["dt"].astype(str) + df+selected["id"].astype(str)
+        transformed_df["unique_id"] = transformed_df["dt"].astype(str) + transformed_df["id"].astype(str)
 
         # convert the unix timestamp column to datetime
-        transformed_df["dt"] = to_datetime(df_selected["dt"], unit="s")
+        transformed_df["dt"] = to_datetime(transformed_df["dt"], unit="s")
 
         # rename columns 
-        transformed_df = df_selected.rename(
+        transformed_df = transformed_df.rename(
             columns={
                 "dt": "datetime",
                 "main.temp": "temperature"
@@ -59,7 +61,9 @@ class Transform():
 
 
         # set the index 
-        transformed_df = df_selected.set_inded(["unique_id"])
+        transformed_df = transformed_df.set_index(["unique_id"])
+
+        print(transformed_df)
 
         return transformed_df
 
